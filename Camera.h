@@ -7,7 +7,7 @@ class Camera {
 public:
 	GLdouble x, y, z, distance, degree;
 	Camera() {
-		distance = 1;
+		distance = 25;
 		x = distance;
 		y = 0;
 		z = 0;
