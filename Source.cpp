@@ -1,13 +1,40 @@
 #include <iostream>
-#include <windows.h>  // for MS Windows
-#include <GL/glut.h>  // GLUT, include glu.h and gl.h
+#include <windows.h>
+#include <GL/glut.h>
 #include <Camera.h>
+#include <fstream>
+#include <string>
+#include <list>
+#include <sstream>
 
-/* Global variables */
+std::list<std::string> names;
+std::list<int> numbers;
 char title[] = "Data Visualization 031890002";
-int refreshMills = 15;        // refresh interval in milliseconds [NEW]
+int refreshMills = 15;
 
 Camera camera;
+
+void readData(const char fileName[]) {
+	std::ifstream file(fileName);
+	int counter = 0;
+	if (file.is_open()) {
+		std::string line;
+		while (std::getline(file, line)) {
+			if (counter % 2 == 0) {
+				names.push_back(line.c_str());
+			}
+			else {
+				std::string text = line.c_str();
+				std::stringstream geek(text);
+				int number;
+				geek >> number;
+				numbers.push_back(number);
+			}
+			counter++;
+		}
+		file.close();
+	}
+}
 
 void drawCube(GLdouble height) {
 	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
@@ -54,7 +81,22 @@ void drawCube(GLdouble height) {
 	glEnd();  // End of drawing color-cube
 }
 
-/* Initialize OpenGL Graphics */
+void draw3D(std::list<std::string> listNames, std::list<int> listNumbers) {
+	int listSize = listNumbers.size();
+	int counter = 0;
+	for (int x : listNumbers) {
+		if (counter == 0) {
+			glTranslatef(0.f, 0.0f, -(listSize - 1) * 2.5f);
+			drawCube((GLdouble)x);
+		}
+		else {
+			glTranslatef(0.0f, 0.0f, 5.0f);
+			drawCube((GLdouble)x);
+		}
+		counter++;
+	}
+}
+
 void initGL() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
 	glClearDepth(1.0f);                   // Set background depth to farthest
@@ -73,10 +115,7 @@ void display() {
 	glLoadIdentity();                 // Reset the model-view matrix
 	gluLookAt(camera.x, camera.y + 2, camera.z, 0, 2, 0, 0, 1, 0);
 
-	glTranslatef(0.f, 0.0f, -2.5f);
-	drawCube(2);
-	glTranslatef(0.0f, 0.0f, 5.0f);
-	drawCube(5);
+	draw3D(names, numbers);
 
 	glutSwapBuffers();  // Swap the front and back frame buffers (double buffering)
 }
@@ -128,6 +167,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 /* Main function: GLUT runs as a console application starting at main() */
 int main(int argc, char** argv) {
+	readData("data.txt");
 	glutInit(&argc, argv);            // Initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
 	glutInitWindowSize(640, 480);   // Set the window's initial width & height
