@@ -8,7 +8,7 @@
 #include <sstream>
 
 std::list<std::string> names;
-std::list<int> numbers;
+std::list<GLdouble> numbers;
 char title[] = "Data Visualization 031890002";
 int refreshMills = 15;
 int graph = 2;
@@ -27,7 +27,7 @@ void readData(const char fileName[]) {
 			else {
 				std::string text = line.c_str();
 				std::stringstream geek(text);
-				int number;
+				GLdouble number;
 				geek >> number;
 				numbers.push_back(number);
 			}
@@ -82,7 +82,7 @@ void drawCube(GLdouble height) {
 	glEnd();  // End of drawing color-cube
 }
 
-void draw3D(std::list<std::string> listNames, std::list<int> listNumbers) {
+void draw3D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
 	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
@@ -91,7 +91,7 @@ void draw3D(std::list<std::string> listNames, std::list<int> listNumbers) {
 
 	int listSize = listNumbers.size();
 	int counter = 0;
-	for (int x : listNumbers) {
+	for (GLdouble x : listNumbers) {
 		if (counter == 0) {
 			glTranslatef(0.f, 0.0f, (listSize - 1) * 2.5f);
 			drawCube((GLdouble)x);
@@ -104,7 +104,7 @@ void draw3D(std::list<std::string> listNames, std::list<int> listNumbers) {
 	}
 }
 
-void draw2D(std::list<std::string> listNames, std::list<int> listNumbers) {
+void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	gluOrtho2D(0, 640, 0, 480);
@@ -231,7 +231,7 @@ void keyboard(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
 	readData("data.txt");
 	GLdouble total = 0;
-	for (int x : numbers) total += x;
+	for (GLdouble x : numbers) total += x;
 	camera.changeCenter((GLdouble)total / numbers.size());
 	glutInit(&argc, argv);            // Initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode

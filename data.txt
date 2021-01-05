@@ -1,8 +1,6 @@
-data1
-1
-data2
-3
-data3
-5
-data4
-7
+Dolar
+7.3985
+Euro
+9.0794
+Sterlin
+10.0489
