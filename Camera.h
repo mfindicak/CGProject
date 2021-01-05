@@ -5,10 +5,11 @@
 
 class Camera {
 public:
-	GLdouble x, y, z, distance, degree;
+	GLdouble x, y, z, distance, degree, centerY;
 	Camera() {
 		distance = 25;
 		x = distance;
+		centerY = 0;
 		y = 0;
 		z = 0;
 		degree = 0;
@@ -24,6 +25,12 @@ public:
 		degree += (M_PI / 180) * value;
 		x = distance * cos(degree);
 		z = distance * sin(degree);
+	}
+
+	void changeCenter(GLdouble value) {
+		centerY = value;
+		y = value;
+		changeDistance(value);
 	}
 
 	void changeDistance(GLdouble value) {

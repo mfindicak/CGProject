@@ -87,17 +87,17 @@ void draw3D(std::list<std::string> listNames, std::list<int> listNumbers) {
 	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
 	glLoadIdentity();                 // Reset the model-view matrix
-	gluLookAt(camera.x, camera.y + 2, camera.z, 0, 2, 0, 0, 1, 0);
+	gluLookAt(camera.x, camera.y, camera.z, 0, camera.centerY, 0, 0, 1, 0);
 
 	int listSize = listNumbers.size();
 	int counter = 0;
 	for (int x : listNumbers) {
 		if (counter == 0) {
-			glTranslatef(0.f, 0.0f, -(listSize - 1) * 2.5f);
+			glTranslatef(0.f, 0.0f, (listSize - 1) * 2.5f);
 			drawCube((GLdouble)x);
 		}
 		else {
-			glTranslatef(0.0f, 0.0f, 5.0f);
+			glTranslatef(0.0f, 0.0f, -5.0f);
 			drawCube((GLdouble)x);
 		}
 		counter++;
@@ -230,6 +230,9 @@ void keyboard(unsigned char key, int x, int y) {
 /* Main function: GLUT runs as a console application starting at main() */
 int main(int argc, char** argv) {
 	readData("data.txt");
+	GLdouble total = 0;
+	for (int x : numbers) total += x;
+	camera.changeCenter((GLdouble)total / numbers.size());
 	glutInit(&argc, argv);            // Initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
 	glutInitWindowSize(640, 480);   // Set the window's initial width & height
