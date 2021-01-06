@@ -7,6 +7,8 @@
 #include <list>
 #include <sstream>
 
+GLsizei myWidth = 640;
+GLsizei myHeight = 480;
 std::list<std::string> names;
 std::list<GLdouble> numbers;
 char title[] = "Data Visualization 031890002";
@@ -108,44 +110,34 @@ void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	gluOrtho2D(0, 640, 0, 480);
-	GLsizei xRaster = 25, yRaster = 150;
-	GLubyte etiket[36] = { 'O','c','a',	'S','u','b',	'M','a','r',
-						'N','i','s',	'M','a','y',	'H','a','z',
-						'T','e','m',	'A','g','u',	'E','y','l',
-						'E','k','m',	'K','a','s',	'A','r','a', };
-	GLint dataValue[12] = { 420, 342, 324, 310, 262, 185,
-							190, 196, 217, 240, 312, 438 };
 
-	GLint ay, k;
-	GLint x = 30; //grafik için x konumunu ilklendir
+	GLsizei startX = 120;
+	GLsizei startY = 50;
 
-	glClear(GL_COLOR_BUFFER_BIT); //Gösterim penceresini temizle
-	glLineWidth(3.0);			//Çizgi kalýnlýðýný ayarla
-	glEnable(GL_LINE_STIPPLE);	//Çizgi özellik deðiþimini aktifleþtir
-	glColor3f(0.0f, 0.0f, 1.0f);			//çizgi rengini maviye ata
-	//Veriyi kýrýklý hat þeklinde çizdir
+	//For Draw X-Y Axis
+	glLineWidth(2.0);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glBegin(GL_LINE_STRIP);
-	for (k = 0; k < 12; k++)
-		glVertex2i(x + k * 50, dataValue[k]);
+	glVertex2i(520, startY);
+	glVertex2i(startX, startY);
+	glVertex2i(startX, startY);
+	glVertex2i(startX, 450);
 	glEnd();
-	glDisable(GL_LINE_STIPPLE);		//Çizgi özellik deðiþimini inaktifleþtir
 
-	//Veri noktalarýný yýldýz þeklinde çizdir
-	glColor3f(1.0f, 0.0f, 0.0f);			//iþaretçi rengini kýrmýzýya ata
-	for (k = 0; k < 12; k++) {
-		glRasterPos2i(xRaster + k * 50, dataValue[k] - 4);
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');
+	GLint counter = 0;
+	GLdouble eachPixelX = (GLdouble)400 / listNames.size();
+
+	for (std::string x : listNames) {
+		GLint textWidth = x.size() * 9;
+		glRasterPos2i(startX + counter * eachPixelX + (eachPixelX - textWidth) / 2, startY - 15);
+		for (char y : x) {
+			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, y);
+		}
+		counter++;
 	}
 
-	//Grafik etiketlerini çizdir
-	glColor3f(0.0f, 0.0f, 0.0f);			//yazý rengini siyaha ata
-	xRaster = 20;
-	for (ay = 0; ay < 12; ay++) {
-		glRasterPos2i(xRaster, yRaster);
-		for (k = 3 * ay; k < 3 * ay + 3; k++)
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, etiket[k]);
-		xRaster += 50;
-	}
+
+
 }
 
 void init2D() {
@@ -235,7 +227,7 @@ int main(int argc, char** argv) {
 	camera.changeCenter((GLdouble)total / numbers.size());
 	glutInit(&argc, argv);            // Initialize GLUT
 	glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
-	glutInitWindowSize(640, 480);   // Set the window's initial width & height
+	glutInitWindowSize(myWidth, myHeight);   // Set the window's initial width & height
 	glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
 	glutCreateWindow(title);          // Create window with the given title
 	glutDisplayFunc(display);       // Register callback handler for window re-paint event
