@@ -125,11 +125,17 @@ void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 	glEnd();
 
 	GLint counter = 0;
-	GLdouble eachPixelX = (GLdouble)400 / listNames.size();
+	GLdouble eachPixel = (GLdouble)390 / listNames.size();
+	GLdouble* nameCenterX = new GLdouble[listNames.size()];
+	GLdouble nameStartX = 0;
+	GLdouble nameStartY = 0;
 
 	for (std::string x : listNames) {
+
 		GLint textWidth = x.size() * 9;
-		glRasterPos2i(startX + counter * eachPixelX + (eachPixelX - textWidth) / 2, startY - 15);
+		nameStartX = startX + counter * eachPixel + (eachPixel - textWidth) / 2;
+		*(nameCenterX + counter) = nameStartX + (GLdouble)(textWidth / 2);
+		glRasterPos2i(nameStartX, startY - 15);
 		for (char y : x) {
 			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, y);
 		}
@@ -138,6 +144,34 @@ void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 
 
 
+	GLdouble maxNumber = 0;
+	GLdouble minNumber = 0;
+	for (GLdouble x : listNumbers) {
+		if (minNumber > x) minNumber = x;
+		if (x > maxNumber) maxNumber = x;
+	}
+
+	GLdouble logResult = log10(maxNumber - minNumber);
+	GLint logNumber = int(logResult) - 1;
+	GLint interval = pow(10, logNumber);
+	counter = 1;
+	for (GLint i = 1;i <= 10;i++) {
+		glRasterPos2i((GLdouble)startX - 4.5f, startY + i * 36.36f);
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '-');
+		glRasterPos2i(startX - logNumber * 9 - 23, startY + i * 36.36f);
+		std::string s = std::to_string(interval * counter);
+		for (char x : s) {
+			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, x);
+		}
+		counter++;
+	}
+
+	counter = 0;
+	for (GLdouble x : listNumbers) {
+		glRasterPos2i(*(nameCenterX + counter) - 4.5f, startY + (GLdouble)x * 36.36f / interval);
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');
+		counter++;
+	}
 }
 
 void init2D() {
