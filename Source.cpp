@@ -145,15 +145,13 @@ void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 
 
 	GLdouble maxNumber = 0;
-	GLdouble minNumber = 0;
 	for (GLdouble x : listNumbers) {
-		if (minNumber > x) minNumber = x;
 		if (x > maxNumber) maxNumber = x;
 	}
 
-	GLdouble logResult = log10(maxNumber - minNumber);
+	GLdouble logResult = log10(maxNumber);
 	GLint logNumber = int(logResult) - 1;
-	GLint interval = (GLint(maxNumber - minNumber) / 10) + 1;
+	GLint interval = (GLint(maxNumber) / 10) + 1;
 	counter = 1;
 	for (GLint i = 1;i <= 10;i++) {
 		glRasterPos2i((GLdouble)startX - 4.5f, startY + i * 36.36f);
