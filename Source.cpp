@@ -150,7 +150,7 @@ void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 	}
 
 	GLdouble logResult = log10(maxNumber);
-	GLint logNumber = int(logResult) - 1;
+	GLint logNumber = int(logResult);
 	GLint interval = (GLint(maxNumber) / 10) + 1;
 	counter = 1;
 	for (GLint i = 1;i <= 10;i++) {
