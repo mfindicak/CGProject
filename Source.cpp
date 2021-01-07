@@ -166,8 +166,12 @@ void draw2D(std::list<std::string> listNames, std::list<GLdouble> listNumbers) {
 
 	counter = 0;
 	for (GLdouble x : listNumbers) {
-		glRasterPos2i(*(nameCenterX + counter) - 4.5f, startY + (GLdouble)x * 36.36f / interval);
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');
+		glBegin(GL_POLYGON);
+		glVertex2i(*(nameCenterX + counter) + 5, startY);
+		glVertex2i(*(nameCenterX + counter) + 5, startY + (GLdouble)x * 36.36f / interval);
+		glVertex2i(*(nameCenterX + counter) - 5, startY + (GLdouble)x * 36.36f / interval);
+		glVertex2i(*(nameCenterX + counter) - 5, startY);
+		glEnd();
 		counter++;
 	}
 }
